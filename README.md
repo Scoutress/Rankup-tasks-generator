@@ -1,1 +1,1 @@
-# Rankup-tasks-generator
+# Rankup tasks generator
