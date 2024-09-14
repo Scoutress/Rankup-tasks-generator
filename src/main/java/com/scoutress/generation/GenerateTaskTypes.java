@@ -31,8 +31,10 @@ public class GenerateTaskTypes {
   }
 
   public static void generateAndPrintSurvivalTasks() {
-    List<String> tasks = getAllSurvivalTypesList();
-    List<String> finalTasks = generateSurvivalTaskTypes(tasks);
-    Ui.printTasksWithNumbers(finalTasks);
+    List<String> taskList = getAllSurvivalTypesList();
+    for (int i = 2; i <= 13; i++) {
+      List<String> levelTasks = generateSurvivalTaskTypes(taskList);
+      Ui.printTasksWithNumbers("To level " + i, levelTasks);
+    }
   }
 }
