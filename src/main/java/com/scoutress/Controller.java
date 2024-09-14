@@ -4,7 +4,7 @@ import com.scoutress.generation.GenerateTaskTypes;
 
 public class Controller {
 
-  public static void startTasks() {
-    GenerateTaskTypes.generateAndPrintSurvivalTasks();
-  }
+	public static void startTasks() {
+		GenerateTaskTypes.generateAndPrintSurvivalTasks();
+	}
 }
