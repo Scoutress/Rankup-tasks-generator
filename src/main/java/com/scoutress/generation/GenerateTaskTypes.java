@@ -1,27 +1,18 @@
 package com.scoutress.generation;
 
+import com.scoutress.utils.Ui;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 public class GenerateTaskTypes {
 
-  private final List<String> allSurvivalTypesList;
+  private static final List<String> allSurvivalTypesList = Arrays.asList("DIG", "KILL", "FURNACE", "CRAFT", "FISH",
+      "PLACE", "HAVE");
 
-  public GenerateTaskTypes() {
-    allSurvivalTypesList = new ArrayList<>();
-    allSurvivalTypesList.add("DIG");
-    allSurvivalTypesList.add("KILL");
-    allSurvivalTypesList.add("FURNACE");
-    allSurvivalTypesList.add("CRAFT");
-    allSurvivalTypesList.add("FISH");
-    allSurvivalTypesList.add("PLACE");
-    allSurvivalTypesList.add("HAVE");
-    System.out.println("test");
-  }
-
-  public List<String> getAllSurvivalTypesList() {
+  public static List<String> getAllSurvivalTypesList() {
     return allSurvivalTypesList;
   }
 
@@ -37,5 +28,11 @@ public class GenerateTaskTypes {
     }
 
     return tasks;
+  }
+
+  public static void generateAndPrintSurvivalTasks() {
+    List<String> tasks = getAllSurvivalTypesList();
+    List<String> finalTasks = generateSurvivalTaskTypes(tasks);
+    Ui.printTasksWithNumbers(finalTasks);
   }
 }
