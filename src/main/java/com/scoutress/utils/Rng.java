@@ -1,3 +1,5 @@
+package com.scoutress.utils;
+
 import java.util.Random;
 
 public class Rng {
