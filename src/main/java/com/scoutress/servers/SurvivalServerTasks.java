@@ -14,12 +14,17 @@ public class SurvivalServerTasks {
   private static double timeForTask;
   private static double itemCountByTime;
   private static double totalTimeForLevel;
+  private static double levelTime;
 
   public static void generateAndPrintSurvivalTasks(int survivalRankupLevelsCount, int survivalRankupTimeForFirstLevel,
       int survivalRankupTimeForLastLevel) {
 
     for (int lvl = 1; lvl < survivalRankupLevelsCount; lvl++) {
       setLevelForTasks(lvl);
+
+      levelTime = survivalRankupTimeForFirstLevel + (survivalRankupTimeForLastLevel - survivalRankupTimeForFirstLevel)
+          * ((lvl - 1) / (double) (survivalRankupLevelsCount - 1));
+
       printLevelTitle();
       totalTimeForLevel = 0;
 
@@ -44,7 +49,7 @@ public class SurvivalServerTasks {
         Item item = SurvivalItems.getRandomItem(taskCategory, itemDifficulty);
         itemName = item.getName();
 
-        setTimeRequiredForTask(survivalRankupTimeForFirstLevel, itemDifficulty, item);
+        setTimeRequiredForTask(levelTime, itemDifficulty, item);
 
         printTasksForLevel();
 
@@ -55,7 +60,7 @@ public class SurvivalServerTasks {
     }
   }
 
-  private static void setTimeRequiredForTask(int levelTime, String difficulty, Item item) {
+  private static void setTimeRequiredForTask(double levelTime, String difficulty, Item item) {
     double randomPercentage = difficulty.equals("easy")
         ? 0.10 + (new Random().nextDouble() * 0.05)
         : 0.05 + (new Random().nextDouble() * 0.05);
