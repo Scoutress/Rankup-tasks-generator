@@ -2,7 +2,7 @@ package com.scoutress;
 
 public class Main {
 	public static void main(String[] args) {
-
-		Controller.startTasks();
+		Controller controller = new Controller();
+		controller.startTasks();
 	}
 }
