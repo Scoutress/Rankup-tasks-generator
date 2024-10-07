@@ -8,7 +8,8 @@ import com.scoutress.servers.SurvivalServerTasks;
 
 public class Controller {
 
-	static String server = "survival";
+	static String server = "survival"; // survival, skyblock, prison.
+	static String mode = "file"; // detailed, clean, file.
 
 	RankupLevels rankupLevels = new RankupLevels();
 	TheoreticalRankupTime teorRankupTime = new TheoreticalRankupTime();
@@ -31,19 +32,22 @@ public class Controller {
 					.generateAndPrintSurvivalTasks(
 							survivalRankupLevels,
 							survivalFirstLevelTime,
-							survivalLastLevelTime);
+							survivalLastLevelTime,
+							mode);
 
 			case "skyblock" -> SkyblockServerTasks
 					.generateAndPrintSkyblockTasks(
 							skyblockRankupLevels,
 							skyblockFirstLevelTime,
-							skyblockLastLevelTime);
+							skyblockLastLevelTime,
+							mode);
 
 			case "prison" -> PrisonServerTasks
 					.generateAndPrintPrisonTasks(
 							prisonRankupLevels,
 							prisonFirstLevelTime,
-							prisonLastLevelTime);
+							prisonLastLevelTime,
+							mode);
 
 			default -> System.out.println("Wrong server name");
 		}
