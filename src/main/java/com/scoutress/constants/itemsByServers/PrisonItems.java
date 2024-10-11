@@ -1,4 +1,4 @@
-package com.scoutress.constants;
+package com.scoutress.constants.itemsByServers;
 
 import com.scoutress.dto.Item;
 import java.util.HashMap;

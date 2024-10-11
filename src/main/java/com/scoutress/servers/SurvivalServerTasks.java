@@ -1,6 +1,6 @@
 package com.scoutress.servers;
 
-import com.scoutress.constants.SurvivalItems;
+import com.scoutress.constants.itemsByServers.SurvivalItems;
 import com.scoutress.dto.Item;
 import java.util.Random;
 
