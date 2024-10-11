@@ -4,10 +4,17 @@ public class Item {
 
   String name;
   Double time;
+  char level;
 
-  public Item(String name, double d) {
+  public Item(String name, double time) {
     this.name = name;
-    this.time = d;
+    this.time = time;
+  }
+
+  public Item(String name, double time, char level) {
+    this.name = name;
+    this.time = time;
+    this.level = level;
   }
 
   public String getName() {
@@ -16,5 +23,9 @@ public class Item {
 
   public Double getTime() {
     return time;
+  }
+
+  public char level() {
+    return level;
   }
 }

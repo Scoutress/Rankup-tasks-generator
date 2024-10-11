@@ -250,7 +250,7 @@ public class SurvivalItems {
 				new Item("ZOMBIE_VILLAGER", 120),
 				new Item("CAMEL", 180)));
 
-		items.put("furnace_ez", List.of( // max 10
+		items.put("furnace_ez", List.of(
 				new Item("BEEF", 3.67),
 				new Item("COOKED_CHICKEN", 3.67),
 				new Item("COOKED_PORKCHOP", 3.67),
@@ -270,7 +270,7 @@ public class SurvivalItems {
 				new Item("TERRACOTTA", 7.67),
 				new Item("DRIED_KELP", 4.17)));
 
-		items.put("furnace_hd", List.of( // min 10
+		items.put("furnace_hd", List.of(
 				new Item("IRON_INGOT", 12.67),
 				new Item("GOLD_INGOT", 17.67),
 				new Item("COPPER_INGOT", 12.67),
@@ -417,7 +417,6 @@ public class SurvivalItems {
 				new Item("PUFFERFISH", 2.64),
 				new Item("BOW", 21.6),
 				new Item("ENCHANTED_BOOK", 21.6),
-				new Item("FISHING_ROD", 21.6),
 				new Item("NAME_TAG", 21.6),
 				new Item("NAUTILUS_SHELL", 21.6),
 				new Item("SADDLE", 21.6),
@@ -855,7 +854,7 @@ public class SurvivalItems {
 				new Item("BAMBOO_BLOCK", 30)));
 	}
 
-	public static Item getRandomItem(String category, String difficulty) {
+	public static Item getRandomSurvivalItem(String category, String difficulty) {
 		String key = category + "_" + (difficulty.equals("easy") ? "ez" : "hd");
 		List<Item> availableItems = items.get(key);
 

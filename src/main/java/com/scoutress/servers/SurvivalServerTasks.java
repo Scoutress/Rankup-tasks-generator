@@ -46,7 +46,7 @@ public class SurvivalServerTasks {
           case 2, 4, 6 -> itemDifficulty = "hard";
         }
 
-        Item item = SurvivalItems.getRandomItem(taskCategory, itemDifficulty);
+        Item item = SurvivalItems.getRandomSurvivalItem(taskCategory, itemDifficulty);
         itemName = item.getName();
 
         setTimeRequiredForTask(levelTime, itemDifficulty, item);
