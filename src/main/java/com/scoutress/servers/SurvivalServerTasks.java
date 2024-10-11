@@ -1,5 +1,6 @@
 package com.scoutress.servers;
 
+import com.scoutress.UI;
 import com.scoutress.constants.LimitedCraftables;
 import com.scoutress.constants.itemsByServers.SurvivalItems;
 import com.scoutress.dto.Item;
@@ -17,10 +18,12 @@ public class SurvivalServerTasks {
   private static double totalTimeForLevel;
   private static double levelTime;
 
-  public static void generateAndPrintSurvivalTasks(int survivalRankupLevelsCount, int survivalRankupTimeForFirstLevel,
-      int survivalRankupTimeForLastLevel, String mode) {
+  public static void generateAndPrintSurvivalTasks(
+      int survivalRankupLevelsCount, int survivalRankupTimeForFirstLevel,
+      int survivalRankupTimeForLastLevel, String mode, String server) {
 
     LimitedCraftables limitedCraftables = new LimitedCraftables();
+    UI ui = new UI();
 
     for (int lvl = 1; lvl < survivalRankupLevelsCount; lvl++) {
       setLevelForTasks(lvl);
@@ -28,7 +31,7 @@ public class SurvivalServerTasks {
       levelTime = survivalRankupTimeForFirstLevel + (survivalRankupTimeForLastLevel - survivalRankupTimeForFirstLevel)
           * ((lvl - 1) / (double) (survivalRankupLevelsCount - 1));
 
-      printLevelTitle(mode);
+      ui.printLevelTitle(mode, level);
       totalTimeForLevel = 0;
 
       for (int currentTaskNumber = 1; currentTaskNumber <= 10; currentTaskNumber++) {
@@ -58,11 +61,14 @@ public class SurvivalServerTasks {
           itemCountByTime = limitedCraftables.getMaxQuantity();
         }
 
-        printTasksForLevel(mode);
-
         totalTimeForLevel += timeForTask * itemCountByTime;
+
+        ui.printTasksForLevel(
+            server, mode, taskNumber, taskCategory, itemDifficulty,
+            itemName, itemCountByTime, timeForTask, totalTimeForLevel);
+
       }
-      printTotalTimeForLevel(mode);
+      ui.printTotalTimeForLevel(mode, totalTimeForLevel);
       System.out.println();
     }
   }
@@ -85,32 +91,5 @@ public class SurvivalServerTasks {
 
   private static void setTaskNumberForLevel(int number) {
     taskNumber = number;
-  }
-
-  private static void printLevelTitle(String mode) {
-    if (!mode.equals("file")) {
-      System.out.printf("Level: %d\n", level);
-    }
-  }
-
-  private static void printTasksForLevel(String mode) {
-    if (!mode.equals("file")) {
-      switch (mode) {
-        case "detailed" -> System.out.printf("%d. %s %s %s %.0f items (%.2f mins/item, %.2f mins total)\n",
-            taskNumber, taskCategory, itemDifficulty, itemName, itemCountByTime, timeForTask,
-            timeForTask * itemCountByTime);
-        case "clean" -> System.out.printf("%d. %s %s %.0f\n", taskNumber, taskCategory, itemName, itemCountByTime);
-        default -> System.out.println("Wrong mode");
-      }
-    }
-  }
-
-  private static void printTotalTimeForLevel(String mode) {
-    double totalHours = totalTimeForLevel / 60;
-    double totalDays = totalHours / 8;
-
-    if (!mode.equals("file")) {
-      System.out.printf("Total: %.2f mins (%.2f hours, %.2f days)\n", totalTimeForLevel, totalHours, totalDays);
-    }
   }
 }

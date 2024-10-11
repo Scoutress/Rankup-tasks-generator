@@ -1,5 +1,6 @@
 package com.scoutress.servers;
 
+import com.scoutress.UI;
 import com.scoutress.constants.LimitedCraftables;
 import com.scoutress.constants.itemsByServers.PrisonItems;
 import com.scoutress.dto.Item;
@@ -17,10 +18,14 @@ public class PrisonServerTasks {
   private static double totalTimeForLevel;
   private static double levelTime;
 
-  public static void generateAndPrintPrisonTasks(int prisonRankupLevelsCount, int prisonRankupTimeForFirstLevel,
-      int prisonRankupTimeForLastLevel, String mode) {
+  public static void generateAndPrintPrisonTasks(
+      int prisonRankupLevelsCount, int prisonRankupTimeForFirstLevel,
+      int prisonRankupTimeForLastLevel, String mode, String server) {
 
     LimitedCraftables limitedCraftables = new LimitedCraftables();
+    UI ui = new UI();
+
+    String itemDifficulty = null;
 
     for (int lvl = 1; lvl < prisonRankupLevelsCount; lvl++) {
       setLevelForTasks(lvl);
@@ -28,7 +33,7 @@ public class PrisonServerTasks {
       levelTime = prisonRankupTimeForFirstLevel + (prisonRankupTimeForLastLevel - prisonRankupTimeForFirstLevel)
           * ((lvl - 1) / (double) (prisonRankupLevelsCount - 1));
 
-      printLevelTitle(mode);
+      ui.printLevelTitle(mode, level);
       totalTimeForLevel = 0;
 
       for (int currentTaskNumber = 1; currentTaskNumber <= 10; currentTaskNumber++) {
@@ -52,8 +57,10 @@ public class PrisonServerTasks {
         List<Item> filteredItems = filterItemsByLevel(itemList, lvl);
 
         if (filteredItems.isEmpty()) {
-          System.out.printf("No items found for category '%s' at level %d. Skipping task %d.\n", taskCategory, lvl,
-              currentTaskNumber);
+          if (!mode.equals("file")) {
+            System.out.printf("No items found for category '%s' at level %d. Skipping task %d.\n", taskCategory, lvl,
+                currentTaskNumber);
+          }
           continue;
         }
 
@@ -66,11 +73,13 @@ public class PrisonServerTasks {
           itemCountByTime = limitedCraftables.getMaxQuantity();
         }
 
-        printTasksForLevel(mode);
+        ui.printTasksForLevel(
+            server, mode, taskNumber, taskCategory, itemDifficulty,
+            itemName, itemCountByTime, timeForTask, totalTimeForLevel);
 
         totalTimeForLevel += timeForTask * itemCountByTime;
       }
-      printTotalTimeForLevel(mode);
+      ui.printTotalTimeForLevel(mode, totalTimeForLevel);
       System.out.println();
     }
   }
@@ -105,54 +114,5 @@ public class PrisonServerTasks {
 
   private static void setTaskNumberForLevel(int number) {
     taskNumber = number;
-  }
-
-  private static void printLevelTitle(String mode) {
-    if (!mode.equals("file")) {
-      System.out.printf("Level: %d\n", level);
-    }
-  }
-
-  private static void printTasksForLevel(String mode) {
-    if (!mode.equals("file")) {
-      switch (mode) {
-        case "detailed" -> {
-          if (taskCategory.equals("placefood") ||
-              taskCategory.equals("cleanplate") ||
-              taskCategory.equals("cleantoilets") ||
-              taskCategory.equals("placedoctor")) {
-            System.out.printf("%d. %s %.0f items (%.2f mins/item, %.2f mins total)\n",
-                taskNumber, taskCategory, itemCountByTime, timeForTask,
-                timeForTask * itemCountByTime);
-          } else {
-            System.out.printf("%d. %s %s %.0f items (%.2f mins/item, %.2f mins total)\n",
-                taskNumber, taskCategory, itemName, itemCountByTime, timeForTask,
-                timeForTask * itemCountByTime);
-          }
-        }
-
-        case "clean" -> {
-          if (taskCategory.equals("placefood") ||
-              taskCategory.equals("cleanplate") ||
-              taskCategory.equals("cleantoilets") ||
-              taskCategory.equals("placedoctor")) {
-            System.out.printf("%d. %s %.0f\n", taskNumber, taskCategory, itemCountByTime);
-          } else {
-            System.out.printf("%d. %s %s %.0f\n", taskNumber, taskCategory, itemName, itemCountByTime);
-          }
-        }
-
-        default -> System.out.println("Wrong mode");
-      }
-    }
-  }
-
-  private static void printTotalTimeForLevel(String mode) {
-    double totalHours = totalTimeForLevel / 60;
-    double totalDays = totalHours / 8;
-
-    if (!mode.equals("file")) {
-      System.out.printf("Total: %.2f mins (%.2f hours, %.2f days)\n", totalTimeForLevel, totalHours, totalDays);
-    }
   }
 }

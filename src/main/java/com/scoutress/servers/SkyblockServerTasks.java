@@ -1,5 +1,6 @@
 package com.scoutress.servers;
 
+import com.scoutress.UI;
 import com.scoutress.constants.LimitedCraftables;
 import com.scoutress.constants.itemsByServers.SkyblockItems;
 import com.scoutress.dto.Item;
@@ -17,11 +18,15 @@ public class SkyblockServerTasks {
   private static double totalTimeForLevel;
   private static double levelTime;
 
-  public static void generateAndPrintSkyblockTasks(int skyblockRankupLevelsCount, int skyblockRankupTimeForFirstLevel,
-      int skyblockRankupTimeForLastLevel, String mode) {
+  public static void generateAndPrintSkyblockTasks(
+      int skyblockRankupLevelsCount, int skyblockRankupTimeForFirstLevel,
+      int skyblockRankupTimeForLastLevel, String mode, String server) {
 
     Random random = new Random();
     LimitedCraftables limitedCraftables = new LimitedCraftables();
+    UI ui = new UI();
+
+    String itemDifficulty = null;
 
     for (int lvl = 1; lvl < skyblockRankupLevelsCount; lvl++) {
       setLevelForTasks(lvl);
@@ -29,7 +34,7 @@ public class SkyblockServerTasks {
       levelTime = skyblockRankupTimeForFirstLevel + (skyblockRankupTimeForLastLevel - skyblockRankupTimeForFirstLevel)
           * ((lvl - 1) / (double) (skyblockRankupLevelsCount - 1));
 
-      printLevelTitle(mode);
+      ui.printLevelTitle(mode, level);
       totalTimeForLevel = 0;
 
       for (int currentTaskNumber = 1; currentTaskNumber <= 8; currentTaskNumber++) {
@@ -70,11 +75,13 @@ public class SkyblockServerTasks {
           itemCountByTime = limitedCraftables.getMaxQuantity();
         }
 
-        printTasksForLevel(mode);
+        ui.printTasksForLevel(
+            server, mode, taskNumber, taskCategory, itemDifficulty,
+            itemName, itemCountByTime, timeForTask, totalTimeForLevel);
 
         totalTimeForLevel += timeForTask * itemCountByTime;
       }
-      printTotalTimeForLevel(mode);
+      ui.printTotalTimeForLevel(mode, totalTimeForLevel);
       System.out.println();
     }
   }
@@ -85,12 +92,6 @@ public class SkyblockServerTasks {
 
   private static void setTaskNumberForLevel(int number) {
     taskNumber = number;
-  }
-
-  private static void printLevelTitle(String mode) {
-    if (!mode.equals("file")) {
-      System.out.printf("Level: %d\n", level);
-    }
   }
 
   private static Item getRandomItem(List<Item> filteredItems) {
@@ -107,51 +108,6 @@ public class SkyblockServerTasks {
     } else {
       itemCountByTime = Math.ceil(taskTime / item.getTime());
       timeForTask = item.getTime();
-    }
-  }
-
-  private static void printTasksForLevel(String mode) {
-    if (!mode.equals("file")) {
-      switch (mode) {
-        case "detailed" -> {
-          switch (taskCategory) {
-            case "DIG", "CRAFT", "FISH", "PLACE", "HAVE", "SMELT", "COOK" ->
-              System.out.printf("%d. Type: %s; Amount: %.0f; Material: %s; (%.2f mins/item, %.2f mins total)\n",
-                  taskNumber, taskCategory, itemCountByTime, itemName, timeForTask, timeForTask * itemCountByTime);
-            case "KILL" ->
-              System.out.printf("%d. Type: %s; Amount: %.0f; Entity: %s; (%.2f mins/item, %.2f mins total)\n",
-                  taskNumber, taskCategory, itemCountByTime, itemName, timeForTask, timeForTask * itemCountByTime);
-            default ->
-              System.out.printf("%d. Type: %s; Amount: %.0f; (%.2f mins/item, %.2f mins total)\n",
-                  taskNumber, taskCategory, itemCountByTime, timeForTask, timeForTask * itemCountByTime);
-          }
-        }
-
-        case "clean" -> {
-          switch (taskCategory) {
-            case "DIG", "CRAFT", "FISH", "PLACE", "HAVE", "SMELT", "COOK" ->
-              System.out.printf("%d. Type: %s; Amount: %.0f; Material: %s;\n",
-                  taskNumber, taskCategory, itemCountByTime, itemName);
-            case "KILL" ->
-              System.out.printf("%d. Type: %s; Amount: %.0f; Entity: %s;\n",
-                  taskNumber, taskCategory, itemCountByTime, itemName);
-            default ->
-              System.out.printf("%d. Type: %s; Amount: %.0f;\n",
-                  taskNumber, taskCategory, itemCountByTime);
-          }
-        }
-
-        default -> System.out.println("Wrong mode");
-      }
-    }
-  }
-
-  private static void printTotalTimeForLevel(String mode) {
-    double totalHours = totalTimeForLevel / 60;
-    double totalDays = totalHours / 8;
-
-    if (!mode.equals("file")) {
-      System.out.printf("Total: %.2f mins (%.2f hours, %.2f days)\n", totalTimeForLevel, totalHours, totalDays);
     }
   }
 }
