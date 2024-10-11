@@ -3,7 +3,6 @@ package com.scoutress.constants.itemsByServers;
 import com.scoutress.dto.Item;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 public class PrisonItems {
 
@@ -91,14 +90,14 @@ public class PrisonItems {
 				new Item("COAL_ORE", 3, 'B'),
 				new Item("IRON_ORE", 4, 'B'),
 				new Item("COPPER_ORE", 5, 'D'),
-				new Item("LAPIS_ORE", 6, 'F'),
+				new Item("LAPIS_LAZULI", 6, 'F'),
 				new Item("GOLD_ORE", 7, 'H'),
-				new Item("REDSTONE_ORE", 8, 'J'),
-				new Item("DIAMOND_ORE", 9, 'L'),
+				new Item("REDSTONE", 8, 'J'),
+				new Item("DIAMOND", 9, 'L'),
 				new Item("BAMBOO", 10, 'L'),
 				new Item("OAK_LOG", 11, 'O'),
 				new Item("GLOWSTONE", 12, 'Q'),
-				new Item("NETHER_QUARTZ_ORE", 13, 'Q'),
+				new Item("NETHER_QUARTZ", 13, 'Q'),
 				new Item("ANCIENT_DEBRIS", 14, 'Q')));
 
 		items.put("placefood", List.of(
@@ -114,14 +113,13 @@ public class PrisonItems {
 				new Item("noname", 0.1, 'A')));
 	}
 
-	public static Item getRandomPrisonItem(String category, String difficulty) {
-		String key = category + "_" + (difficulty.equals("easy") ? "ez" : "hd");
-		List<Item> availableItems = items.get(key);
+	public static List<Item> getItemsByCategory(String taskCategory) {
+		List<Item> availableItems = items.get(taskCategory);
 
 		if (availableItems == null || availableItems.isEmpty()) {
-			throw new RuntimeException("No items found for category: " + key);
+			throw new RuntimeException("No items found for category: " + taskCategory);
 		}
 
-		return availableItems.get(new Random().nextInt(availableItems.size()));
+		return availableItems;
 	}
 }
