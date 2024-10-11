@@ -16,10 +16,11 @@ public class PrisonServerTasks {
   private static double itemCountByTime;
   private static double totalTimeForLevel;
   private static double levelTime;
-  private static final LimitedCraftables limitedCraftables = new LimitedCraftables();
 
   public static void generateAndPrintPrisonTasks(int prisonRankupLevelsCount, int prisonRankupTimeForFirstLevel,
       int prisonRankupTimeForLastLevel, String mode) {
+
+    LimitedCraftables limitedCraftables = new LimitedCraftables();
 
     for (int lvl = 1; lvl < prisonRankupLevelsCount; lvl++) {
       setLevelForTasks(lvl);

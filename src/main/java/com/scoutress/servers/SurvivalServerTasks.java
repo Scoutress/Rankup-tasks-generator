@@ -1,5 +1,6 @@
 package com.scoutress.servers;
 
+import com.scoutress.constants.LimitedCraftables;
 import com.scoutress.constants.itemsByServers.SurvivalItems;
 import com.scoutress.dto.Item;
 import java.util.Random;
@@ -18,6 +19,8 @@ public class SurvivalServerTasks {
 
   public static void generateAndPrintSurvivalTasks(int survivalRankupLevelsCount, int survivalRankupTimeForFirstLevel,
       int survivalRankupTimeForLastLevel, String mode) {
+
+    LimitedCraftables limitedCraftables = new LimitedCraftables();
 
     for (int lvl = 1; lvl < survivalRankupLevelsCount; lvl++) {
       setLevelForTasks(lvl);
@@ -50,6 +53,10 @@ public class SurvivalServerTasks {
         itemName = item.getName();
 
         setTimeRequiredForTask(levelTime, itemDifficulty, item);
+
+        if (limitedCraftables.getItemNames().contains(itemName)) {
+          itemCountByTime = limitedCraftables.getMaxQuantity();
+        }
 
         printTasksForLevel(mode);
 
