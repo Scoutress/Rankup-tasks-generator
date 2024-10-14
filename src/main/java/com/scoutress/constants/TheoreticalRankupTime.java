@@ -6,7 +6,7 @@ public class TheoreticalRankupTime {
 
   public int skyblockRankupTimeForFirstLevel = 45; // mins, 0.75h
 
-  public int prisonRankupTimeForFirstLevel = 180; // min, 3h
+  public int prisonRankupTimeForFirstLevel = 180; // mins, 3h
 
   public int survivalRankupTimeForLastLevel = 1320; // mins, 22h
 

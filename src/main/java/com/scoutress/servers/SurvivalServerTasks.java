@@ -4,6 +4,7 @@ import com.scoutress.UI;
 import com.scoutress.constants.LimitedCraftables;
 import com.scoutress.constants.itemsByServers.SurvivalItems;
 import com.scoutress.dto.Item;
+import com.scoutress.utils.TaskCategoryAssigner;
 import java.util.Random;
 
 public class SurvivalServerTasks {
@@ -23,6 +24,7 @@ public class SurvivalServerTasks {
       int survivalRankupTimeForLastLevel, String mode, String server) {
 
     LimitedCraftables limitedCraftables = new LimitedCraftables();
+    TaskCategoryAssigner tca = new TaskCategoryAssigner();
     UI ui = new UI();
 
     for (int lvl = 1; lvl < survivalRankupLevelsCount; lvl++) {
@@ -37,20 +39,9 @@ public class SurvivalServerTasks {
       for (int currentTaskNumber = 1; currentTaskNumber <= 10; currentTaskNumber++) {
         setTaskNumberForLevel(currentTaskNumber);
 
-        switch (currentTaskNumber) {
-          case 1, 2 -> taskCategory = "dig";
-          case 3, 4 -> taskCategory = "kill";
-          case 5, 6 -> taskCategory = "furnace";
-          case 7 -> taskCategory = "craft";
-          case 8 -> taskCategory = "fish";
-          case 9 -> taskCategory = "place";
-          case 10 -> taskCategory = "have";
-        }
+        taskCategory = tca.determineCurrentTaskCategory(currentTaskNumber, server);
 
-        switch (currentTaskNumber) {
-          case 1, 3, 5, 7, 8, 9, 10 -> itemDifficulty = "easy";
-          case 2, 4, 6 -> itemDifficulty = "hard";
-        }
+        itemDifficulty = determineCurrentTaskItemDifficulty(currentTaskNumber);
 
         Item item = SurvivalItems.getRandomSurvivalItem(taskCategory, itemDifficulty);
         itemName = item.getName();
@@ -91,5 +82,14 @@ public class SurvivalServerTasks {
 
   private static void setTaskNumberForLevel(int number) {
     taskNumber = number;
+  }
+
+  // nauji metodai
+  private static String determineCurrentTaskItemDifficulty(int currentTaskNumber) {
+    switch (currentTaskNumber) {
+      case 1, 3, 5, 7, 8, 9, 10 -> itemDifficulty = "easy";
+      case 2, 4, 6 -> itemDifficulty = "hard";
+    }
+    return itemDifficulty;
   }
 }

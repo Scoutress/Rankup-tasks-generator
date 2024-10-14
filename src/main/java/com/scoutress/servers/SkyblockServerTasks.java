@@ -4,6 +4,7 @@ import com.scoutress.UI;
 import com.scoutress.constants.LimitedCraftables;
 import com.scoutress.constants.itemsByServers.SkyblockItems;
 import com.scoutress.dto.Item;
+import com.scoutress.utils.TaskCategoryAssigner;
 import java.util.List;
 import java.util.Random;
 
@@ -22,8 +23,8 @@ public class SkyblockServerTasks {
       int skyblockRankupLevelsCount, int skyblockRankupTimeForFirstLevel,
       int skyblockRankupTimeForLastLevel, String mode, String server) {
 
-    Random random = new Random();
     LimitedCraftables limitedCraftables = new LimitedCraftables();
+    TaskCategoryAssigner tca = new TaskCategoryAssigner();
     UI ui = new UI();
 
     String itemDifficulty = null;
@@ -40,25 +41,7 @@ public class SkyblockServerTasks {
       for (int currentTaskNumber = 1; currentTaskNumber <= 8; currentTaskNumber++) {
         setTaskNumberForLevel(currentTaskNumber);
 
-        switch (currentTaskNumber) {
-          case 1 -> taskCategory = "XP";
-          case 2 -> taskCategory = "DIG";
-          case 3 -> taskCategory = "PLACE";
-          case 4 -> taskCategory = "KILL";
-          case 5 -> taskCategory = "FISH";
-          case 6 -> {
-            String[] categories = { "SMELT", "COOK" };
-            taskCategory = categories[random.nextInt(categories.length)];
-          }
-          case 7 -> {
-            String[] categories = { "CRAFT", "HAVE" };
-            taskCategory = categories[random.nextInt(categories.length)];
-          }
-          case 8 -> {
-            String[] categories = { "WALK" }; // will be added more later
-            taskCategory = categories[random.nextInt(categories.length)];
-          }
-        }
+        taskCategory = tca.determineCurrentTaskCategory(currentTaskNumber, server);
 
         List<Item> itemList = SkyblockItems.getItemsByCategory(taskCategory);
 
@@ -110,4 +93,7 @@ public class SkyblockServerTasks {
       timeForTask = item.getTime();
     }
   }
+
+  // nauji metodai
+
 }

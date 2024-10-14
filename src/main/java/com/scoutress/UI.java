@@ -15,15 +15,15 @@ public class UI {
 
       switch (server) {
 
-        case "Survival" -> printTasksForSurvivalLevels(
+        case "survival" -> printTasksForSurvivalLevels(
             mode, taskCategory, taskNumber, itemCountByTime,
             timeForTask, totalTimeForLevel, itemName, itemDifficulty);
 
-        case "Skyblock" -> printTasksForSkyblockLevels(
+        case "skyblock" -> printTasksForSkyblockLevels(
             mode, taskCategory, taskNumber, itemCountByTime,
             timeForTask, totalTimeForLevel, itemName);
 
-        case "Prison" -> printTasksForPrisonLevels(
+        case "prison" -> printTasksForPrisonLevels(
             mode, taskCategory, taskNumber, itemCountByTime,
             timeForTask, totalTimeForLevel, itemName);
 

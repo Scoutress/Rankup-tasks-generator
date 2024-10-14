@@ -4,6 +4,7 @@ import com.scoutress.UI;
 import com.scoutress.constants.LimitedCraftables;
 import com.scoutress.constants.itemsByServers.PrisonItems;
 import com.scoutress.dto.Item;
+import com.scoutress.utils.TaskCategoryAssigner;
 import java.util.List;
 import java.util.Random;
 
@@ -23,6 +24,7 @@ public class PrisonServerTasks {
       int prisonRankupTimeForLastLevel, String mode, String server) {
 
     LimitedCraftables limitedCraftables = new LimitedCraftables();
+    TaskCategoryAssigner tca = new TaskCategoryAssigner();
     UI ui = new UI();
 
     String itemDifficulty = null;
@@ -39,18 +41,7 @@ public class PrisonServerTasks {
       for (int currentTaskNumber = 1; currentTaskNumber <= 10; currentTaskNumber++) {
         setTaskNumberForLevel(currentTaskNumber);
 
-        switch (currentTaskNumber) {
-          case 1 -> taskCategory = "dig";
-          case 2 -> taskCategory = "kill";
-          case 3 -> taskCategory = "furnace";
-          case 4 -> taskCategory = "craft";
-          case 5 -> taskCategory = "placedoctor";
-          case 6 -> taskCategory = "cleantoilets";
-          case 7 -> taskCategory = "cleanplate";
-          case 8 -> taskCategory = "placefood";
-          case 9 -> taskCategory = "have";
-          case 10 -> taskCategory = "fish";
-        }
+        taskCategory = tca.determineCurrentTaskCategory(currentTaskNumber, server);
 
         List<Item> itemList = PrisonItems.getItemsByCategory(taskCategory);
 
@@ -115,4 +106,7 @@ public class PrisonServerTasks {
   private static void setTaskNumberForLevel(int number) {
     taskNumber = number;
   }
+
+  // nauji metodai
+
 }
