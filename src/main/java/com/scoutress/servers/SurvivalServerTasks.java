@@ -5,6 +5,7 @@ import com.scoutress.constants.LimitedCraftables;
 import com.scoutress.constants.itemsByServers.SurvivalItems;
 import com.scoutress.dto.Item;
 import com.scoutress.utils.TaskCategoryAssigner;
+import com.scoutress.utils.TaskItemDifficultyAssigner;
 import java.util.Random;
 
 public class SurvivalServerTasks {
@@ -25,6 +26,7 @@ public class SurvivalServerTasks {
 
     LimitedCraftables limitedCraftables = new LimitedCraftables();
     TaskCategoryAssigner tca = new TaskCategoryAssigner();
+    TaskItemDifficultyAssigner tida = new TaskItemDifficultyAssigner();
     UI ui = new UI();
 
     for (int lvl = 1; lvl < survivalRankupLevelsCount; lvl++) {
@@ -41,7 +43,7 @@ public class SurvivalServerTasks {
 
         taskCategory = tca.determineCurrentTaskCategory(currentTaskNumber, server);
 
-        itemDifficulty = determineCurrentTaskItemDifficulty(currentTaskNumber);
+        itemDifficulty = tida.determineCurrentTaskItemDifficulty(currentTaskNumber, server);
 
         Item item = SurvivalItems.getRandomSurvivalItem(taskCategory, itemDifficulty);
         itemName = item.getName();
@@ -85,11 +87,5 @@ public class SurvivalServerTasks {
   }
 
   // nauji metodai
-  private static String determineCurrentTaskItemDifficulty(int currentTaskNumber) {
-    switch (currentTaskNumber) {
-      case 1, 3, 5, 7, 8, 9, 10 -> itemDifficulty = "easy";
-      case 2, 4, 6 -> itemDifficulty = "hard";
-    }
-    return itemDifficulty;
-  }
+
 }
