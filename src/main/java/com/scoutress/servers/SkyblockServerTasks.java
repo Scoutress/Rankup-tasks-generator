@@ -4,13 +4,13 @@ import com.scoutress.UI;
 import com.scoutress.constants.LimitedCraftables;
 import com.scoutress.constants.itemsByServers.SkyblockItems;
 import com.scoutress.dto.Item;
+import com.scoutress.utils.RequiredTimeForTaskAssigner;
 import com.scoutress.utils.TaskCategoryAssigner;
 import java.util.List;
 import java.util.Random;
 
 public class SkyblockServerTasks {
 
-  private static int level;
   private static int taskNumber;
   private static String taskCategory;
   private static String itemName;
@@ -18,30 +18,32 @@ public class SkyblockServerTasks {
   private static double itemCountByTime;
   private static double totalTimeForLevel;
   private static double levelTime;
+  private static double requiredTimeForTask;
 
   public static void generateAndPrintSkyblockTasks(
       int skyblockRankupLevelsCount, int skyblockRankupTimeForFirstLevel,
       int skyblockRankupTimeForLastLevel, String mode, String server) {
 
-    LimitedCraftables limitedCraftables = new LimitedCraftables();
+    LimitedCraftables lc = new LimitedCraftables();
     TaskCategoryAssigner tca = new TaskCategoryAssigner();
+    RequiredTimeForTaskAssigner rtta = new RequiredTimeForTaskAssigner();
     UI ui = new UI();
 
-    String itemDifficulty = null;
+    String itemDifficulty = "normal";
 
     for (int lvl = 1; lvl < skyblockRankupLevelsCount; lvl++) {
-      setLevelForTasks(lvl);
 
-      levelTime = skyblockRankupTimeForFirstLevel + (skyblockRankupTimeForLastLevel - skyblockRankupTimeForFirstLevel)
-          * ((lvl - 1) / (double) (skyblockRankupLevelsCount - 1));
+      levelTime = skyblockRankupTimeForFirstLevel +
+          (skyblockRankupTimeForLastLevel - skyblockRankupTimeForFirstLevel)
+              * ((lvl - 1) / (double) (skyblockRankupLevelsCount - 1));
 
-      ui.printLevelTitle(mode, level);
+      ui.printLevelTitle(mode, lvl);
       totalTimeForLevel = 0;
 
       for (int currentTaskNumber = 1; currentTaskNumber <= 8; currentTaskNumber++) {
         setTaskNumberForLevel(currentTaskNumber);
 
-        taskCategory = tca.determineCurrentTaskCategory(currentTaskNumber, server);
+        taskCategory = tca.determineCurrentTaskCategory(currentTaskNumber, server); // new
 
         List<Item> itemList = SkyblockItems.getItemsByCategory(taskCategory);
 
@@ -52,25 +54,27 @@ public class SkyblockServerTasks {
         Item item = getRandomItem(itemList);
         itemName = item.getName();
 
-        setTimeRequiredForTask(levelTime, item);
+        // TODO: not used
+        requiredTimeForTask = rtta
+            .calculateTimeRequiredForTask(server, itemDifficulty, levelTime); // new
 
-        if (limitedCraftables.getItemNames().contains(itemName)) {
-          itemCountByTime = limitedCraftables.getMaxQuantity();
+        if (lc.getItemNames().contains(itemName)) {
+          itemCountByTime = lc.getMaxQuantity();
+        } else {
+          itemCountByTime = requiredTimeForTask / item.getTime();
         }
+
+        timeForTask = itemCountByTime * item.getTime();
 
         ui.printTasksForLevel(
             server, mode, taskNumber, taskCategory, itemDifficulty,
             itemName, itemCountByTime, timeForTask, totalTimeForLevel);
 
-        totalTimeForLevel += timeForTask * itemCountByTime;
+        totalTimeForLevel += timeForTask;
       }
       ui.printTotalTimeForLevel(mode, totalTimeForLevel);
       System.out.println();
     }
-  }
-
-  private static void setLevelForTasks(int lvl) {
-    level = lvl;
   }
 
   private static void setTaskNumberForLevel(int number) {
@@ -81,19 +85,4 @@ public class SkyblockServerTasks {
     Random random = new Random();
     return filteredItems.get(random.nextInt(filteredItems.size()));
   }
-
-  private static void setTimeRequiredForTask(double levelTime, Item item) {
-    double taskTime = levelTime / 10;
-
-    if (item.isLimitedCraftable()) {
-      itemCountByTime = item.getLimitedCraftableAmount();
-      timeForTask = item.getTime();
-    } else {
-      itemCountByTime = Math.ceil(taskTime / item.getTime());
-      timeForTask = item.getTime();
-    }
-  }
-
-  // nauji metodai
-
 }

@@ -4,13 +4,13 @@ import com.scoutress.UI;
 import com.scoutress.constants.LimitedCraftables;
 import com.scoutress.constants.itemsByServers.PrisonItems;
 import com.scoutress.dto.Item;
+import com.scoutress.utils.RequiredTimeForTaskAssigner;
 import com.scoutress.utils.TaskCategoryAssigner;
 import java.util.List;
 import java.util.Random;
 
 public class PrisonServerTasks {
 
-  private static int level;
   private static int taskNumber;
   private static String taskCategory;
   private static String itemName;
@@ -18,38 +18,38 @@ public class PrisonServerTasks {
   private static double itemCountByTime;
   private static double totalTimeForLevel;
   private static double levelTime;
+  private static double requiredTimeForTask;
 
   public static void generateAndPrintPrisonTasks(
       int prisonRankupLevelsCount, int prisonRankupTimeForFirstLevel,
       int prisonRankupTimeForLastLevel, String mode, String server) {
 
-    LimitedCraftables limitedCraftables = new LimitedCraftables();
+    LimitedCraftables lc = new LimitedCraftables();
     TaskCategoryAssigner tca = new TaskCategoryAssigner();
+    RequiredTimeForTaskAssigner rtta = new RequiredTimeForTaskAssigner();
     UI ui = new UI();
 
-    String itemDifficulty = null;
+    String itemDifficulty = "normal";
 
-    for (int lvl = 1; lvl < prisonRankupLevelsCount; lvl++) {
-      setLevelForTasks(lvl);
+    for (int level = 1; level < prisonRankupLevelsCount; level++) {
 
       levelTime = prisonRankupTimeForFirstLevel + (prisonRankupTimeForLastLevel - prisonRankupTimeForFirstLevel)
-          * ((lvl - 1) / (double) (prisonRankupLevelsCount - 1));
+          * ((level - 1) / (double) (prisonRankupLevelsCount - 1));
 
       ui.printLevelTitle(mode, level);
-      totalTimeForLevel = 0;
 
       for (int currentTaskNumber = 1; currentTaskNumber <= 10; currentTaskNumber++) {
         setTaskNumberForLevel(currentTaskNumber);
 
-        taskCategory = tca.determineCurrentTaskCategory(currentTaskNumber, server);
+        taskCategory = tca.determineCurrentTaskCategory(currentTaskNumber, server); // new
 
         List<Item> itemList = PrisonItems.getItemsByCategory(taskCategory);
 
-        List<Item> filteredItems = filterItemsByLevel(itemList, lvl);
+        List<Item> filteredItems = filterItemsByLevel(itemList, level);
 
         if (filteredItems.isEmpty()) {
           if (!mode.equals("file")) {
-            System.out.printf("No items found for category '%s' at level %d. Skipping task %d.\n", taskCategory, lvl,
+            System.out.printf("No items found for category '%s' at level %d. Skipping task %d.\n", taskCategory, level,
                 currentTaskNumber);
           }
           continue;
@@ -58,17 +58,23 @@ public class PrisonServerTasks {
         Item item = getRandomItem(filteredItems);
         itemName = item.getName();
 
-        setTimeRequiredForTask(levelTime, item);
+        // TODO: not used
+        requiredTimeForTask = rtta
+            .calculateTimeRequiredForTask(server, itemDifficulty, levelTime); // new
 
-        if (limitedCraftables.getItemNames().contains(itemName)) {
-          itemCountByTime = limitedCraftables.getMaxQuantity();
+        if (lc.getItemNames().contains(itemName)) {
+          itemCountByTime = lc.getMaxQuantity();
+        } else {
+          itemCountByTime = requiredTimeForTask / item.getTime();
         }
+
+        timeForTask = itemCountByTime * item.getTime();
 
         ui.printTasksForLevel(
             server, mode, taskNumber, taskCategory, itemDifficulty,
             itemName, itemCountByTime, timeForTask, totalTimeForLevel);
 
-        totalTimeForLevel += timeForTask * itemCountByTime;
+        totalTimeForLevel += timeForTask;
       }
       ui.printTotalTimeForLevel(mode, totalTimeForLevel);
       System.out.println();
@@ -87,26 +93,7 @@ public class PrisonServerTasks {
     return filteredItems.get(random.nextInt(filteredItems.size()));
   }
 
-  private static void setTimeRequiredForTask(double levelTime, Item item) {
-    double taskTime = levelTime / 10;
-
-    if (item.isLimitedCraftable()) {
-      itemCountByTime = item.getLimitedCraftableAmount();
-      timeForTask = item.getTime();
-    } else {
-      itemCountByTime = Math.ceil(taskTime / item.getTime());
-      timeForTask = item.getTime();
-    }
-  }
-
-  private static void setLevelForTasks(int lvl) {
-    level = lvl;
-  }
-
   private static void setTaskNumberForLevel(int number) {
     taskNumber = number;
   }
-
-  // nauji metodai
-
 }
