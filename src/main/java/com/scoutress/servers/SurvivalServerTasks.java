@@ -4,6 +4,7 @@ import com.scoutress.UI;
 import com.scoutress.constants.LimitedCraftables;
 import com.scoutress.constants.itemsByServers.SurvivalItems;
 import com.scoutress.dto.Item;
+import com.scoutress.utils.RequiredTimeForLevelAssigner;
 import com.scoutress.utils.RequiredTimeForTaskAssigner;
 import com.scoutress.utils.TaskCategoryAssigner;
 import com.scoutress.utils.TaskItemDifficultyAssigner;
@@ -23,6 +24,7 @@ public class SurvivalServerTasks {
       int survivalRankupLevelsCount, int survivalRankupTimeForFirstLevel,
       int survivalRankupTimeForLastLevel, String mode, String server) {
 
+    RequiredTimeForLevelAssigner rtla = new RequiredTimeForLevelAssigner();
     LimitedCraftables lc = new LimitedCraftables();
     TaskCategoryAssigner tca = new TaskCategoryAssigner();
     TaskItemDifficultyAssigner tida = new TaskItemDifficultyAssigner();
@@ -31,8 +33,8 @@ public class SurvivalServerTasks {
 
     for (int level = 1; level < survivalRankupLevelsCount; level++) {
 
-      levelTime = survivalRankupTimeForFirstLevel + (survivalRankupTimeForLastLevel - survivalRankupTimeForFirstLevel)
-          * ((level - 1) / (double) (survivalRankupLevelsCount - 1));
+      levelTime = rtla
+          .calculateTimeRequiredForLevel(server, level); // new
 
       ui.printLevelTitle(mode, level);
 

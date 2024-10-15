@@ -4,6 +4,7 @@ import com.scoutress.UI;
 import com.scoutress.constants.LimitedCraftables;
 import com.scoutress.constants.itemsByServers.PrisonItems;
 import com.scoutress.dto.Item;
+import com.scoutress.utils.RequiredTimeForLevelAssigner;
 import com.scoutress.utils.RequiredTimeForTaskAssigner;
 import com.scoutress.utils.TaskCategoryAssigner;
 import java.util.List;
@@ -24,6 +25,7 @@ public class PrisonServerTasks {
       int prisonRankupLevelsCount, int prisonRankupTimeForFirstLevel,
       int prisonRankupTimeForLastLevel, String mode, String server) {
 
+    RequiredTimeForLevelAssigner rtla = new RequiredTimeForLevelAssigner();
     LimitedCraftables lc = new LimitedCraftables();
     TaskCategoryAssigner tca = new TaskCategoryAssigner();
     RequiredTimeForTaskAssigner rtta = new RequiredTimeForTaskAssigner();
@@ -33,8 +35,8 @@ public class PrisonServerTasks {
 
     for (int level = 1; level < prisonRankupLevelsCount; level++) {
 
-      levelTime = prisonRankupTimeForFirstLevel + (prisonRankupTimeForLastLevel - prisonRankupTimeForFirstLevel)
-          * ((level - 1) / (double) (prisonRankupLevelsCount - 1));
+      levelTime = rtla
+          .calculateTimeRequiredForLevel(server, level); // new
 
       ui.printLevelTitle(mode, level);
 

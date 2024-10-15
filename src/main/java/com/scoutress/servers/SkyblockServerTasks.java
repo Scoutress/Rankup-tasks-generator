@@ -4,6 +4,7 @@ import com.scoutress.UI;
 import com.scoutress.constants.LimitedCraftables;
 import com.scoutress.constants.itemsByServers.SkyblockItems;
 import com.scoutress.dto.Item;
+import com.scoutress.utils.RequiredTimeForLevelAssigner;
 import com.scoutress.utils.RequiredTimeForTaskAssigner;
 import com.scoutress.utils.TaskCategoryAssigner;
 import java.util.List;
@@ -24,6 +25,7 @@ public class SkyblockServerTasks {
       int skyblockRankupLevelsCount, int skyblockRankupTimeForFirstLevel,
       int skyblockRankupTimeForLastLevel, String mode, String server) {
 
+    RequiredTimeForLevelAssigner rtla = new RequiredTimeForLevelAssigner();
     LimitedCraftables lc = new LimitedCraftables();
     TaskCategoryAssigner tca = new TaskCategoryAssigner();
     RequiredTimeForTaskAssigner rtta = new RequiredTimeForTaskAssigner();
@@ -31,13 +33,12 @@ public class SkyblockServerTasks {
 
     String itemDifficulty = "normal";
 
-    for (int lvl = 1; lvl < skyblockRankupLevelsCount; lvl++) {
+    for (int level = 1; level < skyblockRankupLevelsCount; level++) {
 
-      levelTime = skyblockRankupTimeForFirstLevel +
-          (skyblockRankupTimeForLastLevel - skyblockRankupTimeForFirstLevel)
-              * ((lvl - 1) / (double) (skyblockRankupLevelsCount - 1));
+      levelTime = rtla
+          .calculateTimeRequiredForLevel(server, level); // new
 
-      ui.printLevelTitle(mode, lvl);
+      ui.printLevelTitle(mode, level);
       totalTimeForLevel = 0;
 
       for (int currentTaskNumber = 1; currentTaskNumber <= 8; currentTaskNumber++) {
