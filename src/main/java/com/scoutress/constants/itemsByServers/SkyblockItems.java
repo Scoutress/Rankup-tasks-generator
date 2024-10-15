@@ -50,12 +50,8 @@ public class SkyblockItems {
 				new Item("ITEM2", 2)));
 	}
 
-	public static List<Item> getItemsByCategory(String taskCategory) {
+	public List<Item> getItemsByCategory(String taskCategory, String difficulty) {
 		List<Item> availableItems = items.get(taskCategory);
-
-		if (availableItems == null || availableItems.isEmpty()) {
-			throw new RuntimeException("No items found for category: " + taskCategory);
-		}
 
 		return availableItems;
 	}

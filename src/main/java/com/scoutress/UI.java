@@ -8,7 +8,8 @@ public class UI {
     }
   }
 
-  public void printTasksForLevel(String server, String mode, int taskNumber, String taskCategory, String itemDifficulty,
+  public void printTasksForLevel(String server, String mode, int currentTaskNumber, String taskCategory,
+      String itemDifficulty,
       String itemName, double itemCountByTime, double timeForTask, double totalTimeForLevel) {
 
     if (!mode.equals("file")) {
@@ -16,15 +17,15 @@ public class UI {
       switch (server) {
 
         case "survival" -> printTasksForSurvivalLevels(
-            mode, taskCategory, taskNumber, itemCountByTime,
+            mode, taskCategory, currentTaskNumber, itemCountByTime,
             timeForTask, totalTimeForLevel, itemName, itemDifficulty);
 
         case "skyblock" -> printTasksForSkyblockLevels(
-            mode, taskCategory, taskNumber, itemCountByTime,
+            mode, taskCategory, currentTaskNumber, itemCountByTime,
             timeForTask, totalTimeForLevel, itemName);
 
         case "prison" -> printTasksForPrisonLevels(
-            mode, taskCategory, taskNumber, itemCountByTime,
+            mode, taskCategory, currentTaskNumber, itemCountByTime,
             timeForTask, totalTimeForLevel, itemName);
 
         default -> printWrongServerForTasks();
@@ -33,16 +34,16 @@ public class UI {
   }
 
   public void printTasksForSurvivalLevels(
-      String mode, String taskCategory, int taskNumber, double itemCountByTime,
+      String mode, String taskCategory, int currentTaskNumber, double itemCountByTime,
       double timeForTask, double totalTimeForLevel, String itemName, String itemDifficulty) {
     switch (mode) {
 
       case "detailed" -> printTasksForSurvivalLevelDetailed(
-          taskCategory, taskNumber, itemCountByTime,
+          taskCategory, currentTaskNumber, itemCountByTime,
           timeForTask, totalTimeForLevel, itemName, itemDifficulty);
 
       case "clean" -> printTasksForSurvivalLevelClean(
-          taskCategory, taskNumber, itemCountByTime,
+          taskCategory, currentTaskNumber, itemCountByTime,
           timeForTask, totalTimeForLevel, itemName);
 
       default -> printWrongModeForTasks();
@@ -50,15 +51,15 @@ public class UI {
   }
 
   public void printTasksForSkyblockLevels(
-      String mode, String taskCategory, int taskNumber, double itemCountByTime,
+      String mode, String taskCategory, int currentTaskNumber, double itemCountByTime,
       double timeForTask, double totalTimeForLevel, String itemName) {
     switch (mode) {
       case "detailed" -> printTasksForSkyblockLevelDetailed(
-          taskCategory, taskNumber, itemCountByTime,
+          taskCategory, currentTaskNumber, itemCountByTime,
           timeForTask, totalTimeForLevel, itemName);
 
       case "clean" -> printTasksForSkyblockLevelClean(
-          taskCategory, taskNumber, itemCountByTime,
+          taskCategory, currentTaskNumber, itemCountByTime,
           timeForTask, totalTimeForLevel, itemName);
 
       default -> printWrongModeForTasks();
@@ -66,16 +67,16 @@ public class UI {
   }
 
   public void printTasksForPrisonLevels(
-      String mode, String taskCategory, int taskNumber, double itemCountByTime,
+      String mode, String taskCategory, int currentTaskNumber, double itemCountByTime,
       double timeForTask, double totalTimeForLevel, String itemName) {
 
     switch (mode) {
       case "detailed" -> printTasksForPrisonLevelDetailed(
-          taskCategory, taskNumber, itemCountByTime,
+          taskCategory, currentTaskNumber, itemCountByTime,
           timeForTask, totalTimeForLevel, itemName);
 
       case "clean" -> printTasksForPrisonLevelClean(
-          taskCategory, taskNumber, itemCountByTime,
+          taskCategory, currentTaskNumber, itemCountByTime,
           timeForTask, totalTimeForLevel, itemName);
 
       default -> printWrongModeForTasks();
@@ -83,63 +84,63 @@ public class UI {
   }
 
   public void printTasksForSurvivalLevelDetailed(
-      String taskCategory, int taskNumber, double itemCountByTime,
+      String taskCategory, int currentTaskNumber, double itemCountByTime,
       double timeForTask, double totalTimeForLevel, String itemName, String itemDifficulty) {
 
     System.out.printf("%d. %s %s %s %.0f items (%.2f mins/item, %.2f mins total)\n",
-        taskNumber, taskCategory, itemDifficulty, itemName, itemCountByTime, timeForTask,
+        currentTaskNumber, taskCategory, itemDifficulty, itemName, itemCountByTime, timeForTask,
         totalTimeForLevel);
   }
 
   public void printTasksForSurvivalLevelClean(
-      String taskCategory, int taskNumber, double itemCountByTime,
+      String taskCategory, int currentTaskNumber, double itemCountByTime,
       double timeForTask, double totalTimeForLevel, String itemName) {
 
-    System.out.printf("%d. %s %s %.0f\n", taskNumber, taskCategory, itemName, itemCountByTime);
+    System.out.printf("%d. %s %s %.0f\n", currentTaskNumber, taskCategory, itemName, itemCountByTime);
   }
 
   public void printTasksForSkyblockLevelDetailed(
-      String taskCategory, int taskNumber, double itemCountByTime,
+      String taskCategory, int currentTaskNumber, double itemCountByTime,
       double timeForTask, double totalTimeForLevel, String itemName) {
 
     switch (taskCategory) {
 
       case "DIG", "CRAFT", "FISH", "PLACE", "HAVE", "SMELT", "COOK" ->
         System.out.printf("%d. Type: %s; Amount: %.0f; Material: %s; (%.2f mins/item, %.2f mins total)\n",
-            taskNumber, taskCategory, itemCountByTime, itemName, timeForTask, totalTimeForLevel);
+            currentTaskNumber, taskCategory, itemCountByTime, itemName, timeForTask, totalTimeForLevel);
 
       case "KILL" ->
         System.out.printf("%d. Type: %s; Amount: %.0f; Entity: %s; (%.2f mins/item, %.2f mins total)\n",
-            taskNumber, taskCategory, itemCountByTime, itemName, timeForTask, totalTimeForLevel);
+            currentTaskNumber, taskCategory, itemCountByTime, itemName, timeForTask, totalTimeForLevel);
 
       default ->
         System.out.printf("%d. Type: %s; Amount: %.0f; (%.2f mins/item, %.2f mins total)\n",
-            taskNumber, taskCategory, itemCountByTime, timeForTask, totalTimeForLevel);
+            currentTaskNumber, taskCategory, itemCountByTime, timeForTask, totalTimeForLevel);
     }
   }
 
   public void printTasksForSkyblockLevelClean(
-      String taskCategory, int taskNumber, double itemCountByTime,
+      String taskCategory, int currentTaskNumber, double itemCountByTime,
       double timeForTask, double totalTimeForLevel, String itemName) {
 
     switch (taskCategory) {
 
       case "DIG", "CRAFT", "FISH", "PLACE", "HAVE", "SMELT", "COOK" ->
         System.out.printf("%d. Type: %s; Amount: %.0f; Material: %s;\n",
-            taskNumber, taskCategory, itemCountByTime, itemName);
+            currentTaskNumber, taskCategory, itemCountByTime, itemName);
 
       case "KILL" ->
         System.out.printf("%d. Type: %s; Amount: %.0f; Entity: %s;\n",
-            taskNumber, taskCategory, itemCountByTime, itemName);
+            currentTaskNumber, taskCategory, itemCountByTime, itemName);
 
       default ->
         System.out.printf("%d. Type: %s; Amount: %.0f;\n",
-            taskNumber, taskCategory, itemCountByTime);
+            currentTaskNumber, taskCategory, itemCountByTime);
     }
   }
 
   public void printTasksForPrisonLevelDetailed(
-      String taskCategory, int taskNumber, double itemCountByTime,
+      String taskCategory, int currentTaskNumber, double itemCountByTime,
       double timeForTask, double totalTimeForLevel, String itemName) {
 
     if (taskCategory.equals("placefood") ||
@@ -147,28 +148,28 @@ public class UI {
         taskCategory.equals("cleantoilets") ||
         taskCategory.equals("placedoctor")) {
       System.out.printf("%d. %s %.0f items (%.2f mins/item, %.2f mins total)\n",
-          taskNumber, taskCategory, itemCountByTime, timeForTask,
+          currentTaskNumber, taskCategory, itemCountByTime, timeForTask,
           totalTimeForLevel);
 
     } else {
       System.out.printf("%d. %s %s %.0f items (%.2f mins/item, %.2f mins total)\n",
-          taskNumber, taskCategory, itemName, itemCountByTime, timeForTask,
+          currentTaskNumber, taskCategory, itemName, itemCountByTime, timeForTask,
           totalTimeForLevel);
     }
   }
 
   public void printTasksForPrisonLevelClean(
-      String taskCategory, int taskNumber, double itemCountByTime,
+      String taskCategory, int currentTaskNumber, double itemCountByTime,
       double timeForTask, double totalTimeForLevel, String itemName) {
 
     if (taskCategory.equals("placefood") ||
         taskCategory.equals("cleanplate") ||
         taskCategory.equals("cleantoilets") ||
         taskCategory.equals("placedoctor")) {
-      System.out.printf("%d. %s %.0f\n", taskNumber, taskCategory, itemCountByTime);
+      System.out.printf("%d. %s %.0f\n", currentTaskNumber, taskCategory, itemCountByTime);
 
     } else {
-      System.out.printf("%d. %s %s %.0f\n", taskNumber, taskCategory, itemName, itemCountByTime);
+      System.out.printf("%d. %s %s %.0f\n", currentTaskNumber, taskCategory, itemName, itemCountByTime);
     }
   }
 

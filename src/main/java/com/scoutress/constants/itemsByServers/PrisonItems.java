@@ -113,12 +113,8 @@ public class PrisonItems {
 				new Item("noname", 0.1, 'A')));
 	}
 
-	public static List<Item> getItemsByCategory(String taskCategory) {
+	public List<Item> getItemsByCategory(String taskCategory, String difficulty) {
 		List<Item> availableItems = items.get(taskCategory);
-
-		if (availableItems == null || availableItems.isEmpty()) {
-			throw new RuntimeException("No items found for category: " + taskCategory);
-		}
 
 		return availableItems;
 	}

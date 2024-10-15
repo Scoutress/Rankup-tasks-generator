@@ -3,7 +3,6 @@ package com.scoutress.constants.itemsByServers;
 import com.scoutress.dto.Item;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 public class SurvivalItems {
 
@@ -854,14 +853,10 @@ public class SurvivalItems {
 				new Item("BAMBOO_BLOCK", 30)));
 	}
 
-	public static Item getRandomSurvivalItem(String category, String difficulty) {
+	public List<Item> getItemsByCategory(String category, String difficulty) {
 		String key = category + "_" + (difficulty.equals("easy") ? "ez" : "hd");
 		List<Item> availableItems = items.get(key);
 
-		if (availableItems == null || availableItems.isEmpty()) {
-			throw new RuntimeException("No items found for category: " + key);
-		}
-
-		return availableItems.get(new Random().nextInt(availableItems.size()));
+		return availableItems;
 	}
 }

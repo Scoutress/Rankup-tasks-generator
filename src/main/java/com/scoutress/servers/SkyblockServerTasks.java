@@ -2,17 +2,14 @@ package com.scoutress.servers;
 
 import com.scoutress.UI;
 import com.scoutress.constants.LimitedCraftables;
-import com.scoutress.constants.itemsByServers.SkyblockItems;
 import com.scoutress.dto.Item;
+import com.scoutress.utils.ItemDataPicker;
 import com.scoutress.utils.RequiredTimeForLevelAssigner;
 import com.scoutress.utils.RequiredTimeForTaskAssigner;
 import com.scoutress.utils.TaskCategoryAssigner;
-import java.util.List;
-import java.util.Random;
 
 public class SkyblockServerTasks {
 
-  private static int taskNumber;
   private static String taskCategory;
   private static String itemName;
   private static double timeForTask;
@@ -28,34 +25,28 @@ public class SkyblockServerTasks {
     RequiredTimeForLevelAssigner rtla = new RequiredTimeForLevelAssigner();
     LimitedCraftables lc = new LimitedCraftables();
     TaskCategoryAssigner tca = new TaskCategoryAssigner();
+    ItemDataPicker idp = new ItemDataPicker();
     RequiredTimeForTaskAssigner rtta = new RequiredTimeForTaskAssigner();
     UI ui = new UI();
 
     String itemDifficulty = "normal";
 
-    for (int level = 1; level < skyblockRankupLevelsCount; level++) {
+    for (int level = 1; level < skyblockRankupLevelsCount; level++) { // good one
 
-      levelTime = rtla
-          .calculateTimeRequiredForLevel(server, level); // new
+      ui
+          .printLevelTitle(mode, level); // good one
 
-      ui.printLevelTitle(mode, level);
-      totalTimeForLevel = 0;
+      for (int currentTaskNumber = 1; currentTaskNumber <= 8; currentTaskNumber++) { // good one
 
-      for (int currentTaskNumber = 1; currentTaskNumber <= 8; currentTaskNumber++) {
-        setTaskNumberForLevel(currentTaskNumber);
+        levelTime = rtla
+            .calculateTimeRequiredForLevel(server, level); // new
 
-        taskCategory = tca.determineCurrentTaskCategory(currentTaskNumber, server); // new
+        taskCategory = tca
+            .determineCurrentTaskCategory(currentTaskNumber, server); // new
 
-        List<Item> itemList = SkyblockItems.getItemsByCategory(taskCategory);
+        Item item = idp.getItemData(server, taskCategory, itemDifficulty); // new
+        itemName = item.getName(); // new
 
-        if (itemList.isEmpty()) {
-          System.out.printf("No items found for category '%s'. Skipping task %d.\n", taskCategory, currentTaskNumber);
-        }
-
-        Item item = getRandomItem(itemList);
-        itemName = item.getName();
-
-        // TODO: not used
         requiredTimeForTask = rtta
             .calculateTimeRequiredForTask(server, itemDifficulty, levelTime); // new
 
@@ -68,7 +59,7 @@ public class SkyblockServerTasks {
         timeForTask = itemCountByTime * item.getTime();
 
         ui.printTasksForLevel(
-            server, mode, taskNumber, taskCategory, itemDifficulty,
+            server, mode, currentTaskNumber, taskCategory, itemDifficulty,
             itemName, itemCountByTime, timeForTask, totalTimeForLevel);
 
         totalTimeForLevel += timeForTask;
@@ -76,14 +67,5 @@ public class SkyblockServerTasks {
       ui.printTotalTimeForLevel(mode, totalTimeForLevel);
       System.out.println();
     }
-  }
-
-  private static void setTaskNumberForLevel(int number) {
-    taskNumber = number;
-  }
-
-  private static Item getRandomItem(List<Item> filteredItems) {
-    Random random = new Random();
-    return filteredItems.get(random.nextInt(filteredItems.size()));
   }
 }
