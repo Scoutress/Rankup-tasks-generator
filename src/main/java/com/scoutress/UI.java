@@ -8,9 +8,9 @@ public class UI {
     }
   }
 
-  public void printTasksForLevel(String server, String mode, int currentTaskNumber, String taskCategory,
-      String itemDifficulty,
-      String itemName, double itemCountByTime, double timeForTask, double totalTimeForLevel) {
+  public void printTasksForLevel(
+      String server, String mode, int currentTaskNumber, String taskCategory, String itemDifficulty,
+      String itemName, double itemCountByTime, double itemTime, double totalTimeForLevel) {
 
     if (!mode.equals("file")) {
 
@@ -18,15 +18,15 @@ public class UI {
 
         case "survival" -> printTasksForSurvivalLevels(
             mode, taskCategory, currentTaskNumber, itemCountByTime,
-            timeForTask, totalTimeForLevel, itemName, itemDifficulty);
+            itemTime, totalTimeForLevel, itemName, itemDifficulty);
 
         case "skyblock" -> printTasksForSkyblockLevels(
             mode, taskCategory, currentTaskNumber, itemCountByTime,
-            timeForTask, totalTimeForLevel, itemName);
+            itemTime, totalTimeForLevel, itemName);
 
         case "prison" -> printTasksForPrisonLevels(
             mode, taskCategory, currentTaskNumber, itemCountByTime,
-            timeForTask, totalTimeForLevel, itemName);
+            itemTime, totalTimeForLevel, itemName);
 
         default -> printWrongServerForTasks();
       }
@@ -35,16 +35,16 @@ public class UI {
 
   public void printTasksForSurvivalLevels(
       String mode, String taskCategory, int currentTaskNumber, double itemCountByTime,
-      double timeForTask, double totalTimeForLevel, String itemName, String itemDifficulty) {
+      double itemTime, double totalTimeForLevel, String itemName, String itemDifficulty) {
     switch (mode) {
 
       case "detailed" -> printTasksForSurvivalLevelDetailed(
           taskCategory, currentTaskNumber, itemCountByTime,
-          timeForTask, totalTimeForLevel, itemName, itemDifficulty);
+          itemTime, totalTimeForLevel, itemName, itemDifficulty);
 
       case "clean" -> printTasksForSurvivalLevelClean(
           taskCategory, currentTaskNumber, itemCountByTime,
-          timeForTask, totalTimeForLevel, itemName);
+          itemTime, totalTimeForLevel, itemName);
 
       default -> printWrongModeForTasks();
     }
@@ -85,11 +85,11 @@ public class UI {
 
   public void printTasksForSurvivalLevelDetailed(
       String taskCategory, int currentTaskNumber, double itemCountByTime,
-      double timeForTask, double totalTimeForLevel, String itemName, String itemDifficulty) {
+      double itemTime, double totalTimeForSingleTask, String itemName, String itemDifficulty) {
 
     System.out.printf("%d. %s %s %s %.0f items (%.2f mins/item, %.2f mins total)\n",
-        currentTaskNumber, taskCategory, itemDifficulty, itemName, itemCountByTime, timeForTask,
-        totalTimeForLevel);
+        currentTaskNumber, taskCategory, itemDifficulty, itemName, itemCountByTime, itemTime,
+        totalTimeForSingleTask);
   }
 
   public void printTasksForSurvivalLevelClean(
