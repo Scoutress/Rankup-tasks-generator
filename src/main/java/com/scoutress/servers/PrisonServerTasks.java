@@ -34,6 +34,8 @@ public class PrisonServerTasks {
 
     for (int level = 1; level < prisonRankupLevelsCount; level++) {
 
+      totalTimeForLevel = 0;
+
       ui
           .printLevelTitle(mode, level);
 

@@ -35,6 +35,8 @@ public class SurvivalServerTasks {
 
     for (int level = 1; level < survivalRankupLevelsCount; level++) {
 
+      totalTimeForLevel = 0;
+
       ui
           .printLevelTitle(mode, level);
 

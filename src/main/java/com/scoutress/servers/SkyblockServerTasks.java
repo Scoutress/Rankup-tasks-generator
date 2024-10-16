@@ -34,6 +34,8 @@ public class SkyblockServerTasks {
 
     for (int level = 1; level < skyblockRankupLevelsCount; level++) {
 
+      totalTimeForLevel = 0;
+
       ui
           .printLevelTitle(mode, level);
 
