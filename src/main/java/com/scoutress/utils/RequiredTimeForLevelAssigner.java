@@ -43,8 +43,8 @@ public class RequiredTimeForLevelAssigner {
     }
 
     double levelTime = timeForFirstLevel +
-        (timeForLastLevel - timeForFirstLevel)
-            * ((level - 1) / (double) (levelsCount - 1));
+        (timeForLastLevel - timeForFirstLevel) *
+            ((level - 1) / (double) (levelsCount - 2));
 
     return levelTime;
   }

@@ -14,7 +14,7 @@ public class ItemCheckerByItemType {
     if (lc.getItemNames().contains(itemName)) {
       itemCountByTime = lc.getMaxQuantity();
     } else {
-      itemCountByTime = (int) (requiredTimeForTask / itemTime);
+      itemCountByTime = (int) Math.round(requiredTimeForTask / itemTime);
     }
     return itemCountByTime;
   }
