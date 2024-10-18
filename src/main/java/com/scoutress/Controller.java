@@ -9,7 +9,7 @@ import com.scoutress.servers.SurvivalServerTasks;
 public class Controller {
 
 	static String server = "survival"; // survival, skyblock, prison.
-	static String mode = "clean"; // detailed, clean, file.
+	static String mode = "detailed"; // detailed, clean.
 
 	RankupLevels rankupLevels = new RankupLevels();
 	TheoreticalRankupTime teorRankupTime = new TheoreticalRankupTime();

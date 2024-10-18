@@ -1,0 +1,21 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Main",
+      "request": "launch",
+      "mainClass": "com.scoutress.Main",
+      "projectName": "Rankup-tasks-generator"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-Main<Rankup-tasks-generator_105824c3>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.scoutress.Main",
+      "projectName": "Rankup-tasks-generator_105824c3",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
