@@ -37,7 +37,7 @@ public class TaskCategoryAssigner {
             taskCategory = categories[random.nextInt(categories.length)];
           }
           case 8 -> {
-            String[] categories = { "WALK" }; // TODO: will be added more later
+            String[] categories = { "WALK", "SWIM_WITH_BOAT", "RIDE_PIG", "RIDE_HORSE", "SWIM", "FLY_ELYTRA" };
             taskCategory = categories[random.nextInt(categories.length)];
           }
         }
