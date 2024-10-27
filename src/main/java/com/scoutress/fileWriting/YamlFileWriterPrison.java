@@ -64,7 +64,11 @@ public final class YamlFileWriterPrison {
   }
 
   public void writeTask(String taskCategory, String itemName, int itemCountByTime) throws IOException {
-    writer.write("      - " + taskCategory + " " + itemName + " " + itemCountByTime + "\n");
+    if (itemName.equals("noname")) {
+      writer.write("      - " + taskCategory + " " + itemCountByTime + "\n");
+    } else {
+      writer.write("      - " + taskCategory + " " + itemName + " " + itemCountByTime + "\n");
+    }
   }
 
   public void writeLastRankName(int prisonRankupLevelsCount) throws IOException {

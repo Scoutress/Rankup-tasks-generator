@@ -13,8 +13,14 @@ public class ItemCheckerByItemType {
 
     if (lc.getItemNames().contains(itemName)) {
       itemCountByTime = lc.getMaxQuantity();
+      if (itemCountByTime == 0) {
+        itemCountByTime += 1;
+      }
     } else {
       itemCountByTime = (int) Math.round(requiredTimeForTask / itemTime);
+      if (itemCountByTime == 0) {
+        itemCountByTime += 1;
+      }
     }
     return itemCountByTime;
   }
