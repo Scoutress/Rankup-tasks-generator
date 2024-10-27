@@ -1,7 +1,10 @@
 package com.scoutress.servers;
 
+import java.io.IOException;
+
 import com.scoutress.UI;
 import com.scoutress.dto.Item;
+import com.scoutress.fileWriting.YamlFileWriterPrison;
 import com.scoutress.utils.ItemCheckerByItemType;
 import com.scoutress.utils.ItemDataPicker;
 import com.scoutress.utils.RequiredTimeForLevelAssigner;
@@ -10,64 +13,75 @@ import com.scoutress.utils.TaskCategoryAssigner;
 
 public class PrisonServerTasks {
 
-  private static String taskCategory;
-  private static String itemName;
-  private static double itemTime;
-  private static int itemCountByTime;
-  private static double totalTimeForLevel;
-  private static double levelTime;
-  private static double requiredTimeForTask;
-  private static double totalTimeForSingleTask;
+	private static String taskCategory;
+	private static String itemName;
+	private static double itemTime;
+	private static int itemCountByTime;
+	private static double totalTimeForLevel;
+	private static double levelTime;
+	private static double requiredTimeForTask;
+	private static double totalTimeForSingleTask;
 
-  public static void generateAndPrintPrisonTasks(
-      int prisonRankupLevelsCount, int prisonRankupTimeForFirstLevel,
-      int prisonRankupTimeForLastLevel, String mode, String server) {
+	public static void generateAndPrintPrisonTasks(
+			int prisonRankupLevelsCount, int prisonRankupTimeForFirstLevel,
+			int prisonRankupTimeForLastLevel, String mode, String server) {
 
-    RequiredTimeForLevelAssigner rtla = new RequiredTimeForLevelAssigner();
-    TaskCategoryAssigner tca = new TaskCategoryAssigner();
-    ItemDataPicker idp = new ItemDataPicker();
-    RequiredTimeForTaskAssigner rtta = new RequiredTimeForTaskAssigner();
-    ItemCheckerByItemType icit = new ItemCheckerByItemType();
-    UI ui = new UI();
+		RequiredTimeForLevelAssigner rtla = new RequiredTimeForLevelAssigner();
+		TaskCategoryAssigner tca = new TaskCategoryAssigner();
+		ItemDataPicker idp = new ItemDataPicker();
+		RequiredTimeForTaskAssigner rtta = new RequiredTimeForTaskAssigner();
+		ItemCheckerByItemType icit = new ItemCheckerByItemType();
+		UI ui = new UI();
 
-    String itemDifficulty = "normal";
+		String itemDifficulty = "normal";
 
-    for (int level = 1; level < prisonRankupLevelsCount; level++) {
+		try {
 
-      totalTimeForLevel = 0;
+			YamlFileWriterPrison yamlWriter = new YamlFileWriterPrison("RankUp.yml");
 
-      ui
-          .printLevelTitle(mode, level);
+			for (int level = 1; level < prisonRankupLevelsCount; level++) {
 
-      for (int currentTaskNumber = 1; currentTaskNumber <= 10; currentTaskNumber++) {
+				totalTimeForLevel = 0;
+				ui.printLevelTitle(mode, level);
 
-        levelTime = rtla
-            .calculateTimeRequiredForLevel(server, level);
+				yamlWriter.writeRankName(level);
+				yamlWriter.writeTasksPermission(level);
+				yamlWriter.writeNextRankName(level);
+				yamlWriter.writeNextLevelPrefix(level);
+				yamlWriter.writeNextCellNumber(level);
+				yamlWriter.writeMoneyNeededToLevelUp(level);
+				yamlWriter.writeTasksHeader();
 
-        taskCategory = tca
-            .determineCurrentTaskCategory(currentTaskNumber, server);
+				for (int currentTaskNumber = 1; currentTaskNumber <= 10; currentTaskNumber++) {
 
-        Item item = idp.getItemData(server, taskCategory, itemDifficulty);
-        itemName = item.getName();
-        itemTime = item.getTime();
+					levelTime = rtla.calculateTimeRequiredForLevel(server, level);
+					taskCategory = tca.determineCurrentTaskCategory(currentTaskNumber, server);
 
-        requiredTimeForTask = rtta
-            .calculateTimeRequiredForTask(server, itemDifficulty, levelTime);
+					Item item = idp.getItemData(server, taskCategory, itemDifficulty);
 
-        itemCountByTime = icit
-            .calculateItemsByGivenTime(itemName, requiredTimeForTask, itemTime);
+					itemName = item.getName();
+					itemTime = item.getTime();
 
-        totalTimeForSingleTask = itemTime * itemCountByTime;
-        totalTimeForLevel += totalTimeForSingleTask;
+					requiredTimeForTask = rtta.calculateTimeRequiredForTask(server, itemDifficulty, levelTime);
+					itemCountByTime = icit.calculateItemsByGivenTime(itemName, requiredTimeForTask, itemTime);
 
-        ui
-            .printTasksForLevel(
-                server, mode, currentTaskNumber, taskCategory, itemDifficulty,
-                itemName, itemCountByTime, itemTime, totalTimeForSingleTask);
-      }
-      ui
-          .printTotalTimeForLevel(mode, totalTimeForLevel);
-      System.out.println();
-    }
-  }
+					totalTimeForSingleTask = itemTime * itemCountByTime;
+					totalTimeForLevel += totalTimeForSingleTask;
+
+					yamlWriter.writeTask(taskCategory, itemName, itemCountByTime);
+
+					ui.printTasksForLevel(
+							server, mode, currentTaskNumber, taskCategory, itemDifficulty,
+							itemName, itemCountByTime, itemTime, totalTimeForSingleTask);
+				}
+				ui.printTotalTimeForLevel(mode, totalTimeForLevel);
+				System.out.println();
+			}
+			yamlWriter.writeLastRankName(prisonRankupLevelsCount);
+			yamlWriter.writeLastLevelPermission(prisonRankupLevelsCount);
+			yamlWriter.close();
+
+		} catch (IOException e) {
+		}
+	}
 }

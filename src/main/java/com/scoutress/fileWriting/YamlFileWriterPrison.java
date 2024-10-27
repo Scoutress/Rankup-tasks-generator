@@ -6,18 +6,16 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 
-import com.scoutress.utils.NextLevelPrefixPicker;
+import com.scoutress.utils.AlphabetLetter;
 import com.scoutress.utils.RankupPriceAssigner;
-import com.scoutress.utils.RomanNumbersPicker;
 
-public final class YamlFileWriterSurvival {
+public final class YamlFileWriterPrison {
 
   private final BufferedWriter writer;
-  RomanNumbersPicker rnp = new RomanNumbersPicker();
-  NextLevelPrefixPicker nlpp = new NextLevelPrefixPicker();
+  AlphabetLetter al = new AlphabetLetter();
   RankupPriceAssigner rpa = new RankupPriceAssigner();
 
-  public YamlFileWriterSurvival(String fileName) throws IOException {
+  public YamlFileWriterPrison(String fileName) throws IOException {
     writer = new BufferedWriter(
         new OutputStreamWriter(
             new FileOutputStream(fileName), StandardCharsets.UTF_8));
@@ -31,8 +29,7 @@ public final class YamlFileWriterSurvival {
   public void writeRankName(int level) throws IOException {
     String levelName = level == 1
         ? "default"
-        : rnp
-            .getRomanNumeral(level);
+        : al.getLetterByNumber(level).toLowerCase();
     writer.write("  " + levelName + ":\n");
   }
 
@@ -42,17 +39,22 @@ public final class YamlFileWriterSurvival {
   }
 
   public void writeNextRankName(int level) throws IOException {
-    String nextRankName = rnp.getRomanNumeral(level + 1);
+    String nextRankName = al.getLetterByNumber(level + 1);
     writer.write("    Next rank: " + nextRankName + "\n");
   }
 
   public void writeNextLevelPrefix(int level) throws IOException {
-    String nextPrefix = nlpp.getNextPrefix(level + 1);
-    writer.write("    Show on rankup: \"&3" + nextPrefix + "\"\n");
+    String nextRankName = al.getLetterByNumber(level + 1);
+    writer.write("    Show on rankup: \"&3" + nextRankName + "\"\n");
+  }
+
+  public void writeNextCellNumber(int level) throws IOException {
+    int nextCellLevel = level + 1;
+    writer.write("    Upgrade to cell: " + nextCellLevel + "\n");
   }
 
   public void writeMoneyNeededToLevelUp(int level) throws IOException {
-    int basePrice = 5000;
+    int basePrice = 2500;
     double money = rpa.setRankupPrice(level, basePrice);
     writer.write("    Needs money: " + money + "\n");
   }
@@ -65,18 +67,13 @@ public final class YamlFileWriterSurvival {
     writer.write("      - " + taskCategory + " " + itemName + " " + itemCountByTime + "\n");
   }
 
-  public void writeXpTask(int level) throws IOException {
-    int xp = level * 2500;
-    writer.write("      - xp gained " + xp + "\n");
-  }
-
-  public void writeLastRankName(int survivalRankupLevelsCount) throws IOException {
-    String lastRankName = rnp.getRomanNumeral(survivalRankupLevelsCount);
+  public void writeLastRankName(int prisonRankupLevelsCount) throws IOException {
+    String lastRankName = al.getLetterByNumber(prisonRankupLevelsCount).toLowerCase();
     writer.write("  " + lastRankName + ":\n");
   }
 
-  public void writeLastLevelPermission(int survivalRankupLevelsCount) throws IOException {
-    String permission = "ranks." + survivalRankupLevelsCount;
+  public void writeLastLevelPermission(int prisonRankupLevelsCount) throws IOException {
+    String permission = "ranks." + prisonRankupLevelsCount;
     writer.write("    Permission: " + permission);
   }
 

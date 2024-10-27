@@ -2,8 +2,8 @@ package com.scoutress.utils;
 
 public class RankupPriceAssigner {
 
-  public double setRankupPrice(int level) {
-    double price = level * 5000;
+  public double setRankupPrice(int level, int basePrice) {
+    double price = level * basePrice;
     return price;
   }
 

@@ -65,10 +65,10 @@ public class SkyblockServerTasks {
 				for (int currentTaskNumber = 1; currentTaskNumber <= 8; currentTaskNumber++) {
 
 					levelTime = rtla.calculateTimeRequiredForLevel(server, level);
-
 					taskCategory = tca.determineCurrentTaskCategory(currentTaskNumber, server);
 
 					Item item = idp.getItemData(server, taskCategory, itemDifficulty);
+
 					itemName = item.getName();
 					itemTime = item.getTime();
 
